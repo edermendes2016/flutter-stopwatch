@@ -19,6 +19,8 @@ class Contact {
   DateTime dataCreation;
   bool active;
 
+  Contact();
+
   Contact.fromMap(Map map) {
     id = map[idCollumn];
     id = map[nameCollumn];
