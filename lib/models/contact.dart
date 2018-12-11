@@ -1,5 +1,7 @@
-import 'package:sqflite/sqflite.dart';  
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
 
+final String contactTable = "Contacts";
 final String idCollumn = "Id";
 final String nameCollumn = "Name";
 final String emailCollumn = "Email";
@@ -11,10 +13,33 @@ final String activeCollumn = "Active";
 
 class ContactModel {
   static final ContactModel _instance = ContactModel.internal();
-  
-  factory ContactModel () => _instance;
+
+  factory ContactModel() => _instance;
 
   ContactModel.internal();
+
+  Database _db;
+
+ Future<Database> get db async {
+    if (_db != null) {
+      return _db;
+    } else {
+      _db = await initDb();
+      return _db;
+    }
+  }
+
+  Future<Database>initDb() async {
+    final databasePath = await getDatabasesPath();
+    final path = join(databasePath, "contacts.db");
+
+    return await openDatabase(path, version: 1, onCreate: (Database db, int newerVersion) async{
+      await db.execute(
+        "CREATE TABLE $contactTable($idCollumn INTEGER PRIMARY KEY, $nameCollumn TEXT, $emailCollumn TEXT," 
+        "$phoneCollumn TEXT, $adressCollumn TEXT, $imgCollumn TEXT, $dataCreationCollumn DATETIME, $activeCollumn BOOL)"
+      );
+    });
+  }
 }
 
 class Contact {
@@ -27,7 +52,7 @@ class Contact {
   DateTime dataCreation;
   bool active;
 
-  Contact.fromMap(Map map){
+  Contact.fromMap(Map map) {
     id = map[idCollumn];
     id = map[nameCollumn];
     id = map[emailCollumn];
@@ -40,18 +65,17 @@ class Contact {
 
   Map toMap() {
     Map<String, dynamic> map = {
-      nameCollumn : name,
-      emailCollumn : email,
-      phoneCollumn : email,
-      adressCollumn : adress,
-      imgCollumn : img,
-      dataCreationCollumn : dataCreation,
-      activeCollumn : active
+      nameCollumn: name,
+      emailCollumn: email,
+      phoneCollumn: email,
+      adressCollumn: adress,
+      imgCollumn: img,
+      dataCreationCollumn: dataCreation,
+      activeCollumn: active
     };
-    if(id != null){
+    if (id != null) {
       map[idCollumn] = id;
     }
     return map;
   }
-   
 }
