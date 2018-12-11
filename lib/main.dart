@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:stopwatch/views/body.dart';
 
+
 void main() {
   runApp(MaterialApp(
     home: Home(),
@@ -20,8 +21,20 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Teste"),
-          backgroundColor: Colors.black,
+          title: const Text('TEXT',
+              style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w400,
+                  fontFamily: 'i')),
+          backgroundColor: Colors.deepPurple[300],
+          actions: <Widget>[
+            IconButton(
+              iconSize: 22.0,
+              onPressed: () {},
+              color: Colors.black,
+              icon: Icon(Icons.filter_list),
+            )
+          ],
           centerTitle: true,
         ),
         body: AppBody());
